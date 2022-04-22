@@ -4,8 +4,7 @@ var cors = require('cors')
 const port =process.env.PORT || 8080
 app.use(cors())
 app.get('/',(req,res)=>{
-    res.write('<h1>welcome to my homePage</h1>')
-    res.write('<h1>welcome to my homePage</h1>')
+    res.json({data:'welcome to my homePage'})
     res.send()
 })
 
