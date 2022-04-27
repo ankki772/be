@@ -1,24 +1,26 @@
 const express =require('express');
 const app = express();
+const {db,UserCollection} =require("./db_connect/db_connect")
+
 var cors = require('cors')
-const port =process.env.PORT || 8080
+const port = process.env.PORT || 8080
 app.use(cors())
-app.get('/',(req,res)=>{
-    res.json({data:'welcome to my homePage'})
-    res.send()
+app.use(express.json())
+
+
+app.post('/',(req,res)=>{
+    const userDetail = UserCollection(req.body)
+    userDetail.save((err,userDetail)=>{
+        if (err){
+           res.status(500).send({err})
+        }
+        else{
+            res.status(200).send({data:userDetail})
+        }
+    });  
 })
 
-app.get('/about',(req,res)=>{
-    res.send('<h1>welcome to about Page</h1>')
-})
 
-app.get('/contact',(req,res)=>{
-    res.send('<h1>welcome to contact  Page</h1>')
-})
-
-app.get('/temp',(req,res)=>{
-    res.send('<h1>welcome to weather temperature  Page</h1>')
-})
 
 app.listen(port,()=>{
    console.log(`listening  to port ${port}`);
