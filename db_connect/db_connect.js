@@ -13,7 +13,7 @@ const db = () => {
 
 const UserSchema = new Schema({
     name:String,
-    phone:Number,
+    phone:String,
     email:String,
     password:String
 })
