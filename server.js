@@ -17,7 +17,7 @@ app.post('/', async(req, res) => {
    {
         userDetail.save((err, userDetail) => {
         if (err) {
-            res.status(404).send({ err :err.message})
+            res.status(400).send({ err :err.message})
         }
         else {
             res.status(200).send({ data: userDetail })
