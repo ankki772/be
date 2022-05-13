@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { stringify } = require("nodemon/lib/utils");
-const {Schema,model} =  mongoose
+const { Schema, model } = mongoose
 var dburl = "mongodb+srv://akki772:1234@cluster0.mudrl.mongodb.net/userDetails?retryWrites=true&w=majority";
 
 
@@ -12,28 +12,38 @@ const db = () => {
 
 
 const UserSchema = new Schema({
-    name:String,
-    phone:String,
-    email: {
+    name: String,
+    phone: {
         type: String,
-        trim: true,
-        lowercase: true,
-        unique: true,
         validate: {
-            validator: function(v) {
-                return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+            validator: function (v) {
+                return /\d{3}\d{3}\d{4}/.test(v);
             },
-            message: "Please enter a valid email"
+            message: props => `${props.value} is not a valid phone number!`
         },
-        required: [true, "Email required"]
+        required: [true, 'User phone number required']
+    
+},
+    email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    unique: true,
+    validate: {
+        validator: function (v) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+        },
+        message: "Please enter a valid email"
     },
-    password:String
+    required: [true, "Email required"]
+},
+    password: String
 
 })
 
-const UserCollection = model("UserCollection",UserSchema)
+const UserCollection = model("UserCollection", UserSchema)
 
-module.exports={
-    db:db(),
+module.exports = {
+    db: db(),
     UserCollection
 }
