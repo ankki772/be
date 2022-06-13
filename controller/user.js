@@ -1,10 +1,15 @@
 const jwt = require('jsonwebtoken')
 const sendMail = require('../NodeMailer/sms');
-const {UserCollection} = require('../db_connect/db_connect')
+const { hashPassword, matchPassword } =require ('../bcrypt/bcrypt');
+const {UserCollection} = require('../db_connect/db_connect');
 
 
 exports.addUser= async (req, res) => {
-    try { const userDetail = UserCollection(req.body)
+    const passHash =  await hashPassword(req.body.password);
+    req.body.password = passHash;
+
+    try {
+      const userDetail = UserCollection(req.body)
       console.log(userDetail);
       const result = await UserCollection.findOne({ email: userDetail.email })
       if(result){
@@ -12,7 +17,7 @@ exports.addUser= async (req, res) => {
       }
       else
      {
-          userDetail.save((err, userDetail) => {
+         await userDetail.save((err, userDetail) => {
           if (err) {
               res.send({ err :err.message})
           }
@@ -23,28 +28,24 @@ exports.addUser= async (req, res) => {
   }catch(err){
       res.status(500).send(err);
   }
-const emailResult = await sendMail();
-  console.log("00000",emailResult);
-
+// const emailResult = await sendMail();
+//   console.log("00000",emailResult);
 
   }
 
-
-  
-  exports.loginUser=async (req, res) => {
-      console.log(req.body);
+  exports.loginUser=async (req, res) => { 
     try {
         const {emailphone,password} = req.body
-        const result = await UserCollection.findOne({$and:[{$or:[{ email:emailphone },{ phone:emailphone }]},{password}]})  
-         console.log(result);
-        if (result) {
-            console.log("======>",result);   
-            const token = jwt.sign({ result }, 'ssshhh',{expiresIn:"2h"})
+        const result = await UserCollection.findOne({$or:[{ email:emailphone },{ phone:emailphone }]}) 
+        const comparePassword = await matchPassword(password,result.password) ;
+        if (result && comparePassword) {  
+            const token = jwt.sign({ result }, 'ankit',{expiresIn:"2h"})
             console.log(token);
             res.status(200).send({ token })
         }
-        else {
-            res.status(500).send({ msg: "user not found" })
+        else 
+        {
+            res.send({ msg: "user not found" })
         }
     }
     catch (err) {
@@ -64,11 +65,9 @@ exports.getUsers= async (req,res)=>{
 
 exports.updateUser = async (req,res)=>{
       try{
-          console.log(".............>>>.",req.body);
-          const {_id,name,phone,email} = req.body 
-          const result = await  UserCollection.findOneAndUpdate({_id},{$set:{name,phone,email}},{new: true})
-          console.log(",,,,,",result);
-          res.status(200).send({result})
+          const {name,phone,email} = req.body 
+          const result = await  UserCollection.findOneAndUpdate({email},{$set:{name,phone,email}},{new: true})
+           result ? res.status(200).send({result}) : res.status(404).send({msg:"user not found"})
           
       }
       catch(e){
