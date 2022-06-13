@@ -37,14 +37,15 @@ exports.addUser= async (req, res) => {
     try {
         const {emailphone,password} = req.body
         const result = await UserCollection.findOne({$or:[{ email:emailphone },{ phone:emailphone }]}) 
-        if(!result) return  res.send({msg:"user not found"})
+        if(!result) return  res.status(401).send({msg:"user not found"})
         const comparePassword = await matchPassword(password,result.password) ;
         if (result && comparePassword) {  
             const token = jwt.sign({ result }, 'ankit',{expiresIn:"2h"})
             console.log(token);
             return res.status(200).send({ token })
         }
-       
+       else 
+       return res.status(401).send({msg:"user not found no password matched"})
     }
     catch (err) {
        return  res.status(500).send({ err })
