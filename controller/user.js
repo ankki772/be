@@ -45,7 +45,7 @@ exports.loginUser = async (req, res) => {
             res.status(200).send({ token })
         }
         else {
-            res.status(500).send({ msg: "user not found" })
+            res.status(401).send({ msg: "user not found" })
         }
     }
     catch (err) {
