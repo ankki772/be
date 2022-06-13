@@ -47,7 +47,7 @@ exports.addUser= async (req, res) => {
        return res.status(401).send({msg:"user not found no password matched"})
     }
     catch (err) {
-       return  res.status(500).send({ err })
+       return  res.status(500).send( err )
     }
 }
 
