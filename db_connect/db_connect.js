@@ -37,7 +37,9 @@ const UserSchema = new Schema({
     },
     required: [true, "Email required"]
 },
-    password: String
+    password: String,
+    address:{type:Array,default:[]},
+    cartIems:{type:Array,default:[]}
 
 })
 

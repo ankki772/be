@@ -19,7 +19,8 @@ exports.addUser= async (req, res) => {
      {
          await userDetail.save((err, userDetail) => {
           if (err) {
-              res.send({ err :err.message})
+            console.log(err.message);
+              res.status(204).send({ msg :err.message})
           }
           else {
               res.status(200).send({ data: userDetail })
@@ -73,3 +74,11 @@ exports.updateUser = async (req,res)=>{
       }
 
 }
+
+// exports.addtoCart= async (req,res) =>{
+//     try{
+//         const {id} = req.body;
+//         const result = await UserCollection.find({email},{$set:{...address,id}})
+//     }
+
+// }
