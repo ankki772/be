@@ -20,7 +20,7 @@ exports.addUser= async (req, res) => {
          await userDetail.save((err, userDetail) => {
           if (err) {
             console.log(err.message);
-              res.status(204).send({ msg :err.message})
+              res.status(200).send({ msg :err.message})
           }
           else {
               res.status(200).send({ data: userDetail })
