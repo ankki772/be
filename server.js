@@ -13,7 +13,6 @@ const userRoutes = require('./Routes/user');
         configur_parser();
         configur_routes();
         error404();
-    
         globalErrorHandler();
     })()
 

@@ -6,10 +6,8 @@ const authenticateToken = (req, res, next) => {
   console.log(token);
 
   if (token == null) return res.sendStatus(401)
-
   jwt.verify(String(token), "ankit", (err, user) => {
-
-    if (err) return res.status(400).send({ msg: "invalid Token" })
+  if (err) return res.status(400).send({ msg: "invalid Token" })
     next();
   })
 };

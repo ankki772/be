@@ -2,7 +2,6 @@ const router = require('express').Router();
 const userController = require('../controller/user');
 const auth = require('../middleware/auth');
 
-
 (()=>{
     getRequest()
     postRequest()
@@ -18,7 +17,7 @@ function getRequest(){
 function postRequest(){
     router.post('/add',userController.addUser)
     router.post('/login',userController.loginUser)
-    // router.post('/addtoCart',auth,userController.addtoCart)
+    router.post('/addtoCart',auth,userController.addtoCart)
 }
 
 
